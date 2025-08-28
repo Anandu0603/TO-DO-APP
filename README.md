@@ -142,6 +142,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 └── README.md           # Main documentation
 ```
 
+<!-- Deployment trigger: Update README to kick off a new Vercel build -->
+
 ## Setup and Running
 
 ### Prerequisites
