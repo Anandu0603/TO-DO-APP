@@ -10,6 +10,11 @@
       "use": "@vercel/node"
     }
   ],
+  "functions": {
+    "api/index.mjs": {
+      "includeFiles": "backend/**"
+    }
+  },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.mjs" },
     { "src": "/(.*)", "dest": "frontend/build/$1" }
