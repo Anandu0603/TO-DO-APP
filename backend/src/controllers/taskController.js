@@ -1,10 +1,11 @@
-const Task = require('../models/Task');
+import * as Task from '../models/Task.js';
 
 
 // Get all tasks
-exports.getAllTasks = async (req, res) => {
+export const getAllTasks = async (req, res) => {
   try {
-    const { data, error } = await Task.getAll();
+    const userId = req.user?.id;
+    const { data, error } = await Task.getAll(userId);
 
     if (error) {
       return res.status(500).json({ error });
@@ -17,11 +18,11 @@ exports.getAllTasks = async (req, res) => {
 };
 
 // Get a single task by ID
-exports.getTaskById = async (req, res) => {
+export const getTaskById = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    const { data, error } = await Task.getById(id);
+    const userId = req.user?.id;
+    const { data, error } = await Task.getById(id, userId);
 
     if (error) {
       return res.status(500).json({ error });
@@ -38,15 +39,16 @@ exports.getTaskById = async (req, res) => {
 };
 
 // Create a new task
-exports.createTask = async (req, res) => {
+export const createTask = async (req, res) => {
   try {
     const { title, description, status = 'pending' } = req.body;
+    const userId = req.user?.id;
 
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
     }
 
-    const { data, error } = await Task.create({ title, description, status });
+    const { data, error } = await Task.create({ title, description, status, user_id: userId });
 
     if (error) {
       return res.status(400).json({ error });
@@ -59,12 +61,12 @@ exports.createTask = async (req, res) => {
 };
 
 // Update a task
-exports.updateTask = async (req, res) => {
+export const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, status } = req.body;
-
-    const { data, error } = await Task.update(id, { title, description, status });
+    const userId = req.user?.id;
+    const { data, error } = await Task.update(id, { title, description, status, user_id: userId });
 
     if (error) {
       if (error === 'Task not found') {
@@ -80,11 +82,11 @@ exports.updateTask = async (req, res) => {
 };
 
 // Delete a task
-exports.deleteTask = async (req, res) => {
+export const deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const { success, error } = await Task.delete(id);
+    const userId = req.user?.id;
+    const { success, error } = await Task.deleteTask(id, userId);
 
     if (error) {
       if (error === 'Task not found') {
